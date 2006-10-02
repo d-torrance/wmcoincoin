@@ -353,9 +353,6 @@
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 #undef TM_IN_SYS_TIME
 
-/* Version number of package */
-#undef VERSION
-
 /* define if xinerama API is supported */
 #undef XINERAMA
 

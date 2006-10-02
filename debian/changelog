@@ -1,0 +1,237 @@
+wmcoincoin (2.5.1e-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  2 Oct 2006 10:41:51 +0200
+
+wmcoincoin (2.5.1d-3) unstable; urgency=low
+
+  * rules: remove bashisms (closes: #379632).
+  * Standards version is 3.7.2.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 26 Jul 2006 17:29:38 +0200
+
+wmcoincoin (2.5.1d-2) unstable; urgency=low
+
+  * Remove the build-dependency on xlibs-static-dev, use libxinerama-dev 
+    instead.
+  * Add missing build-dependency on libxft-dev.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 19 Feb 2006 11:23:32 +0100
+
+wmcoincoin (2.5.1d-1) unstable; urgency=low
+
+  * New upstream release to fix the annoying "poufpouf" bug.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 15 Oct 2005 17:33:27 +0200
+
+wmcoincoin (2.5.1c-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  3 Oct 2005 22:47:19 +0200
+
+wmcoincoin (2.5.1b-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 27 Sep 2005 00:33:24 +0200
+
+wmcoincoin (2.5.1a-1) unstable; urgency=low
+
+  * New upstream release.
+  * Standards-version is 3.6.2.
+  * debian/menu: correctly quote all strings.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 26 Sep 2005 22:11:06 +0200
+
+wmcoincoin (2.5.0g-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/rules: pass --as-needed to ld, to deflate dependencies.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 14 Jun 2005 23:41:37 +0200
+
+wmcoincoin (2.5.0f-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 23 Feb 2005 22:24:06 +0100
+
+wmcoincoin (2.5.0c-2) unstable; urgency=medium
+
+  * debian/control: build-depend on libxt-dev (closes: #266271).
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 17 Aug 2004 13:39:26 +0200
+
+wmcoincoin (2.5.0c-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/wmcoincoin.sh: launch the binary with $0=wmcoincoin.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 17 May 2004 11:38:03 +0200
+
+wmcoincoin (2.5.0b-1) unstable; urgency=low
+
+  * New upstream release.
+  * Require libxft2-dev and libgtk2.0-dev.
+  * Split out X libs build-dependencies.
+  * Move out scripts and player to /usr/lib.
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  4 May 2004 14:56:03 +0200
+
+wmcoincoin (2.4.6b-1) unstable; urgency=low
+
+  * New upstream release.
+  * Build-depend on libimlib2-dev.
+  * Standards-version is 3.6.1.
+  * Use debian/compat.
+  * Provide manpages for wmcoincoin_player and wmcoincoin-totoz-get.
+  * Remove wmcoincoin-kde.
+
+ -- Josselin Mouette <joss@debian.org>  Sat,  6 Sep 2003 15:01:40 +0200
+
+wmcoincoin (2.4.5b-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  7 Jul 2003 14:30:50 +0200
+
+wmcoincoin (2.4.5a-1) unstable; urgency=low
+
+  * New upstream release.
+  * Remove configure patch.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 23 Jun 2003 19:14:15 +0200
+
+wmcoincoin (2.4.4c-2) unstable; urgency=low
+ 
+  * debian/control: updated description.
+  * Standards-version is 3.5.10.
+  * As #178596 is over, build again with -O2 on s390.
+  * Use original icon again.
+  * Cleanup in debian/rules.
+  * configure: remove the 'remove -g' code. Don't touch configure.ac as it
+    breaks the whole (fragile) build system.
+  * config.h.in, debian/rules: use the package version as VERSION.
+ 
+ -- Josselin Mouette <joss@debian.org>  Tue, 17 Jun 2003 16:22:47 +0200
+
+wmcoincoin (2.4.4c-1) unstable; urgency=low
+
+  * New upstream release (necessary to post on linuxfr.org regarding
+    the new referer check).
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 13 Mar 2003 14:25:28 +0100
+
+wmcoincoin (2.4.4b-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 11 Mar 2003 13:13:03 +0100
+
+wmcoincoin (2.4.4a-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 10 Mar 2003 11:31:54 +0100
+
+wmcoincoin (2.4.3c-2) unstable; urgency=low
+
+  * Use -O1 on s390 to avoid build failure.
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 30 Jan 2003 13:30:26 +0100
+
+wmcoincoin (2.4.3c-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 22 Jan 2003 13:48:22 +0100
+
+wmcoincoin (2.4.2b-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  6 Jan 2003 14:20:27 +0100
+
+wmcoincoin (2.4.2a-2) unstable; urgency=low
+
+  * Make icon conform to menu specifications and move it to
+    /usr/share/icons.
+  * Typo in debian/copyright.
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  3 Dec 2002 14:51:42 +0100
+
+wmcoincoin (2.4.2a-1) unstable; urgency=low
+
+  * New upstream release
+  * Standards version is 3.5.8.
+  * Use debhelper mode 4 and dh_install.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 30 Nov 2002 12:39:46 +0100
+
+wmcoincoin (2.4.1a-1) unstable; urgency=low
+
+  * New upstream release.
+  * The package should now follow the policy version 3.5.7.
+  * WMCoinCoin should be stable and secure enough now, and DaCode is in
+    the archive, let's upload to Debian (closes: #150551).
+  * Removed build-dep on automake.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 16 Oct 2002 22:35:12 +0200
+
+wmcoincoin (2.4.0limule-2) unstable; urgency=low
+
+  * debian/control: improved description.
+  * Use autotools-dev instead of providing config.*
+  * debian/copyright: made upstream URL point to SF.
+  * debian/control: added upstream URLs.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 16 Oct 2002 20:49:19 +0200
+
+wmcoincoin (2.4.0limule-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Sat,  5 Oct 2002 23:24:25 +0200
+
+wmcoincoin (2.4.0c-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  9 Sep 2002 12:24:40 +0200
+
+wmcoincoin (2.4.0a-1) unstable; urgency=low
+
+  * New upstream release
+  * Removed unuseful README.Debian
+
+ -- Josselin Mouette <joss@debian.org>  Sat,  7 Sep 2002 21:42:20 +0200
+
+wmcoincoin (2.3.8.2dtc-1) unstable; urgency=low
+
+  * New upstream release (CVS snapshot)
+
+ -- Josselin Mouette <joss@debian.org>  Thu,  5 Sep 2002 09:54:46 +0200
+
+wmcoincoin (2.3.8+kikoo-1) unstable; urgency=low
+
+  * New upstream release
+  * Build-depend on libgtk1.2-dev (for wmccc) and automake-1.6.
+  * Makefile.am: removed duplicate intl in SUBDIRS.
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  3 Sep 2002 14:07:23 +0200
+
+wmcoincoin (2.3.8b-2) unstable; urgency=low
+
+  * debian/rules: made a symlink from /usr/share/doc/wmcoincoin/examples
+    to /usr/share/wmcoincoin.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 24 Jun 2002 13:04:29 +0200
+
+wmcoincoin (2.3.8b-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 20 Jun 2002 15:02:55 +0200
+

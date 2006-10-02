@@ -1,0 +1,25 @@
+Source: wmcoincoin
+Section: x11
+Priority: extra
+Maintainer: Josselin Mouette <joss@debian.org>
+Build-Depends: debhelper (>> 4), libgtk2.0-dev, autotools-dev, libimlib2-dev, libxft2-dev, libsm-dev, libice-dev, libx11-dev, libxft-dev, libxt-dev, libxext-dev, libxinerama-dev
+Standards-Version: 3.7.2
+
+Package: wmcoincoin
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Humourous dockapp for browsing DaCode sites' news and board
+ WMCoinCoin allows you to browse linuxfr.org and other sites based on
+ DaCode 1.4, Templeet and many other webchat engines. It will:
+  * display website news with new items displayed prominently;
+  * display private messages, showing the appropriate web page when
+    new messages are received;
+  * allow tabbed browsing of multiple sites;
+  * display the board/webchat and allow new messages to be posted, with the
+    ability to detect, enhance or kill trolls.
+ .
+ WMCoinCoin, while being full of stupid things, is a real advanced
+ chatting client, using HTTP, with low bandwidth requirements.
+ .
+ URL: http://hules.free.fr/wmcoincoin/ (French)
+      http://sourceforge.net/projects/dacode/
