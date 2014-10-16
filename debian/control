@@ -2,7 +2,7 @@ Source: wmcoincoin
 Section: x11
 Priority: extra
 Maintainer: Josselin Mouette <joss@debian.org>
-Build-Depends: debhelper (>> 4), libgtk2.0-dev, autotools-dev, libimlib2-dev, libxft2-dev, libsm-dev, libice-dev, libx11-dev, libxft-dev, libxt-dev, libxext-dev, libxinerama-dev
+Build-Depends: debhelper (>=9), libgtk2.0-dev, autotools-dev, libimlib2-dev, libxft2-dev, libsm-dev, libice-dev, libx11-dev, libxft-dev, libxt-dev, libxext-dev, libxinerama-dev
 Standards-Version: 3.7.2
 
 Package: wmcoincoin
