@@ -26,8 +26,8 @@ struct {
 void update_prefs_from_obsolete_features(SitePrefs *sp) {
   char *site_url, *path_tribune_backend, *path_tribune_add;
   site_url = ObsoleteFeatures.site_url[0] ? ObsoleteFeatures.site_url : strdup("http://linuxfr.org");
-  path_tribune_backend = ObsoleteFeatures.path_tribune_backend[0] ? ObsoleteFeatures.path_tribune_backend : "board/remote.xml";
-  path_tribune_add = ObsoleteFeatures.path_tribune_add[0] ? ObsoleteFeatures.path_tribune_add : "board/add.php3";
+  path_tribune_backend = ObsoleteFeatures.path_tribune_backend[0] ? ObsoleteFeatures.path_tribune_backend : "board/index.xml";
+  path_tribune_add = ObsoleteFeatures.path_tribune_add[0] ? ObsoleteFeatures.path_tribune_add : "board";
   while (site_url[strlen(site_url)-1] == '/') site_url[strlen(site_url)-1] = 0;
   while (path_tribune_backend[0] == '/') path_tribune_backend++;
   while (path_tribune_add[0] == '/') path_tribune_add++;
@@ -732,7 +732,7 @@ wmcc_site_prefs_set_default(SitePrefs *p, int verbatim) {
   p->proxy_name = NULL;
   p->proxy_port = 1080;/* meme valeur par defaut que curl ... */
   p->proxy_nocache = 0;
-  ASSIGN_STRING_VAL(p->backend_url, "http://linuxfr.org/board/remote.xml");
+  ASSIGN_STRING_VAL(p->backend_url, "http://linuxfr.org/board/index.xml");
   p->backend_type = BACKEND_TYPE_BOARD;
   p->backend_flavour = BACKEND_FLAVOUR_UNENCODED; /* style 'moderne' par défaut */
   ASSIGN_STRING_VAL(p->post_url, "");//board/add.php3");
@@ -858,6 +858,7 @@ wmcc_prefs_set_default(GeneralPrefs *p) {
   p->browser_cmd = NULL;
   p->browser2_cmd = NULL;
   ASSIGN_STRING_VAL(p->gogole_search_url, "http://www.google.fr/search?q=%s");
+  ASSIGN_STRING_VAL(p->wikipedia_search_url, "http://fr.wikipedia.org/wiki/Special:Search?search=%s&go=Go");
   p->enable_troll_detector = 1;
   p->board_auto_dl_pictures = 0;
   p->board_enable_hfr_pictures = 0;
@@ -911,7 +912,7 @@ wmcc_prefs_set_default(GeneralPrefs *p) {
   p->pp_width = 300;
   p->pp_height = 455;
   p->pp_minibar_on = 1;
-  p->pp_show_sec_mode = 0;
+  p->pp_show_sec_mode = 1;
   p->pp_html_mode = 1;
   p->pp_nick_mode = 4;
   p->pp_trollscore_mode = 1;           
@@ -1002,6 +1003,7 @@ wmcc_prefs_destroy(GeneralPrefs *p)
   }
   FREE_STRING(p->board_scrinechote);
   FREE_STRING(p->gogole_search_url);
+  FREE_STRING(p->wikipedia_search_url);
   for (i=0; i < p->nb_sites; i++) { 
     assert(p->site[i]);
     wmcc_site_prefs_destroy(p->site[i]); free(p->site[i]); p->site[i] = NULL; 
@@ -1315,6 +1317,9 @@ wmcc_prefs_validate_option(GeneralPrefs *p, SitePrefs *sp, SitePrefs *global_sp,
     } break; 
     case OPT_http_gogole_search_url: {
       ASSIGN_STRING_VAL(p->gogole_search_url, arg);
+    } break;
+    case OPT_http_wikipedia_search_url: {
+      ASSIGN_STRING_VAL(p->wikipedia_search_url, arg);
     } break;
     case OPT_http_timeout: {
       CHECK_INTEGER_ARG(20,600, p->http_timeout);

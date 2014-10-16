@@ -178,6 +178,7 @@ prefs_write_to_file(GeneralPrefs *p, FILE *f) {
   G_SAVESTR(OPT_http_browser,browser_cmd);
   G_SAVESTR(OPT_http_browser2,browser2_cmd);
   G_SAVESTR(OPT_http_gogole_search_url, gogole_search_url);
+  G_SAVESTR(OPT_http_wikipedia_search_url, wikipedia_search_url);
   G_SAVEINT(OPT_http_timeout, http_timeout);
   G_SAVEINT(OPT_http_inet_ip_version, http_inet_ip_version);
   G_SAVESTR(OPT_pinnipede_font_family,pp_fn_family);

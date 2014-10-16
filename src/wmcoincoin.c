@@ -15,7 +15,8 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+
 
 
  */
@@ -617,62 +618,6 @@ wmcc_log_http_request(Site *s, HttpRequest *r)
   }
 }
 
-/* cette gruikerie vous est offerte par lordoric(c)(tm) */
-/*
- * Tente de formater potablement un message d'erreur retourné par le serveur
- * C'est de la bricole pour linuxfr, hein !
- * ( et ne pas oublier le free() sur le joli_message, oui c'est crados )
- */
-char *formate_erreur( char *tribune, char *message_ignoble )
-{
-  char *debut, *fin, *erreur;
-  int taille;
-  char *joli_message = NULL;
-  int content = 0;
-  
-  debut = strstr( message_ignoble, "<div class=\"menubar\">" );
-  
-  if ( NULL != debut ) 
-    {
-      // Chouette, c'est bien le template de linuxfr
-      debut = strstr( debut, "</div>" ) + 6;
-      if ( NULL != debut ) {	
-        fin = strstr( debut, "<div" );
-        if ( NULL != fin ) {
-          taille = MIN(fin - debut,99999); // pour éviter le petit-suicide du coincoin dans str_printf
-          erreur = strdup( debut );
-          erreur[taille] = 0;	 // j'ai honte
-          
-          if ( NULL != strstr( erreur, "XP >=" )	)
-            {
-              printf("erreur=%s\nlen=%d", erreur,(int)strlen(erreur));
-              
-              joli_message = str_printf( _("[%s] Ooops, there must have been a little problem, "
-                                           "the server answered:<p>%s<p>%s"), tribune, erreur,
-                                         _("Check your cookies !") );
-            } else {
-            printf("erreur=%s\nlen=%d", erreur,(int)strlen(erreur)); fflush(stdout);
-              joli_message = str_printf( _("[%s] Ooops, there must have been a little problem, "
-                                           "the server answered:<p>%s"), tribune, erreur );
-            }
-          
-          // Ca a marche \o/
-          content = 1;
-        }
-      }
-    }
-  
-  /*  if ( ! content && strstr(message_ignoble, "Redirection vers http://www.nofrag.com"))
-    content = 1;
-  else printf("message ignoble=%s\n",message_ignoble);
-  */
-  if ( ! content ) {
-    joli_message = str_printf( _("[%s] Ooops, there must have been a little problem, "
-                                 "the server answered:<p>%s"), tribune, message_ignoble );	
-  }
-  return joli_message;
-}
-
 /* 
    poste le message sur la tribune -- en tant que fonction 'lente' 
    cette fonction est executée par la boucle principale
@@ -717,8 +662,10 @@ exec_coin_coin(Dock *dock, int sid, const char *ua, const char *msg_)
   /* Triton> Euh..., je ne suis pas sur de ce que je dois mettre ici,
              je crois que je vais repousser à plus tard.
              Bon, tonton zorel< a dit text/xml alors je mets text/xml 
-             hop, un truc de plus qui est fait ! Patch Accept: fini. \o/ */
-  r.accept = strdup("text/xml");
+             hop, un truc de plus qui est fait ! Patch Accept: fini. \o/
+     See> application/xml, c'est bien aussi.
+  */
+  r.accept = strdup("application/xml, text/xml");
   if (dock->post_anonyme && r.cookie) { free(r.cookie); r.cookie = NULL; }
   r.type = HTTP_POST;
   r.referer = strdup(path); url_au_coiffeur(r.referer, 1);
@@ -733,26 +680,18 @@ exec_coin_coin(Dock *dock, int sid, const char *ua, const char *msg_)
   BLAHBLAH(1,myprintf("request sent, status=%<YEL %d> (%d)\n", r.telnet.error, flag_cancel_task));
   wmcc_log_http_request(site, &r);
   if (http_is_ok(&r)) {
-    /* trimer servira a nettoyer les reponses pas vides de zorel< son espace est chiant */
-    unsigned char *reponse, *trimer; 
-
-    reponse = http_read_all(&r, site->prefs->site_name);
-    trimer = reponse;
-    /* nettoyage des caracteres blancs : espace, tab, CR et LF */
-    while ((*trimer == ' ') ||
-           (*trimer == '\r') ||
-           (*trimer == '\t') ||
-           (*trimer == '\n')) trimer++;
-    if ( *trimer != 0 ) {
-			char *s;
-      s = formate_erreur( site->prefs->site_name, reponse ); 
-      if (s) { msgbox_show(dock, s); free(s); }
-      free(reponse);
+    if (!site->prefs->user_cookie && r.new_cookie) {
+        site->prefs->user_cookie = strdup(r.new_cookie);
+	char *p;
+	for (p = site->prefs->user_cookie; *p; ++p) {
+	    if (*p == '\n' || *p == '\r') *p = ' ';
+	}
     }
     http_request_close(&r);
     site->http_success_cnt++;
     site->http_recent_error_cnt = 0;
-  } else if (r.response != 302) {
+    site->board->last_posted_id = r.post_id;
+ } else if (r.response >= 400 && r.response != 406) { /* 406 c'est du bête "Not Acceptable", on s'en fout */
     char *s;
     /* si la reponse n'est pas un 302 Found */
     s = str_printf(_("[%s] Damned ! There has been an error<p>%s"), site->prefs->site_name, http_error());
@@ -1628,14 +1567,14 @@ void initx(Dock *dock, int argc, char **argv) {
   }
   
   /* la magie des locales */
-  XSetLocaleModifiers("@im=none"); /* si quelqu'un sait ce que ça veut dire, je suis interessé */
+//  XSetLocaleModifiers("@im=none"); /* si quelqu'un sait ce que ça veut dire, je suis interessé */
   dock->input_method = (dock->fuck_utf8 ? NULL : XOpenIM(dock->display, NULL, NULL, NULL));
   if (!dock->input_method) {
-    printf("echec de XOpenIM() [locale=%s], ca pue ! -- switching to C locale\n",setlocale (LC_ALL, ""));
-    setlocale (LC_ALL, "C");
+ //   printf("echec de XOpenIM() [locale=%s], ca pue ! -- switching to C locale\n",setlocale (LC_ALL, ""));
+ //   setlocale (LC_ALL, "C");
     dock->input_method = XOpenIM(dock->display, NULL, NULL, NULL);
     if (!dock->input_method) {
-      printf("Erreur ! echec de XOpenIM() [locale=%s], ca pue encore plus !! -- \n",setlocale (LC_ALL, ""));
+   //   printf("Erreur ! echec de XOpenIM() [locale=%s], ca pue encore plus !! -- \n",setlocale (LC_ALL, ""));
     }
   }
   kb_build();
@@ -2048,7 +1987,7 @@ int main(int argc, char **argv)
 #ifdef __CYGWIN__
   pthread_t timer_thread;
 #endif
-  setlocale (LC_ALL, "");
+  //setlocale (LC_ALL, "");
   umask(077); /* allez hop */
   /* on peut forcer la locale sans faire d'export LC_MESSAGES=blahblah
      avec l'option -l */

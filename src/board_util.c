@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 
  */
@@ -203,7 +203,7 @@ boards_find_id(const Boards *boards, id_type id)
   } else {
     Board *b;
 
-    assert(id.sid < MAX_SITES && id.sid >= 0);
+    assert((unsigned)id.sid < MAX_SITES);
     b = boards->btab[id.sid];
     assert(b);
     return board_find_id(b, id.lid);
@@ -444,6 +444,24 @@ board_key_list_get_mi_positive_list(Boards *boards, board_msg_info *mi, KeyList 
   return pl;
 }
 
+int is_utf8_superscript(const unsigned char *p, int *superscript) {
+  if (p[0] == 0xC2) {
+    if (p[1] == 0xB2) { 
+      if (superscript) *superscript = 2; 
+      return 2;
+    }
+    if (p[1] == 0xB3) { 
+      if (superscript) *superscript = 3; 
+      return 2;
+    }
+    if (p[1] == 0xB9) { 
+      if (superscript) *superscript = 1; 
+      return 2;
+    }
+  }
+  return 0;
+}
+
 
 /* si 'ww' contient une reference (du type '1630', '125421', '12:45:30') vers un message existant, on renvoie 
    son msg_info, et on rempli 'commentaire' 
@@ -495,16 +513,18 @@ check_for_horloge_ref_basic_helper(const unsigned char *ww, const char **site_na
   p = w; 
   /* verifie que la chaine ne contient que des chiffres et des ':' ou des '.' (les ':' n'etant pas en premiere ou derniere position) */
   while (*p) { 
+    int l = 1;
     if ((*p == ':' || *p == '.' || 
 	 (use_deuxpt == 0 && *p == 'h') || (use_deuxpt == 1 && *p == 'm')) 
 	&& p != w && *(p+1)) {
       use_deuxpt++;
     } else if (*p < '0' || *p > '9') {
-      if (*(p+1) == 0 && strchr("¹²³",*p) == NULL)
-	break;
+      int ll = is_utf8_superscript(p, NULL);
+      if (ll == 0 || p[ll] != 0) break;
+      else l = ll;
     }
 
-    p++;
+    p+=l;
   }
   if (*p) return 0;
   
@@ -518,13 +538,12 @@ check_for_horloge_ref_basic_helper(const unsigned char *ww, const char **site_na
       h = (w[0]-'0')*10 + (w[1]-'0');
       m = (w[2]-'0')*10 + (w[3]-'0');
       s = (w[4]-'0')*10 + (w[5]-'0');
-    } else if (l == 7) {
+    } else if (l == 8) {
       h = (w[0]-'0')*10 + (w[1]-'0');
       m = (w[2]-'0')*10 + (w[3]-'0');
       s = (w[4]-'0')*10 + (w[5]-'0');
-      if (w[6] == (unsigned char)'¹') num = 0; 
-      else if (w[6] == (unsigned char)'²') num = 1; 
-      else if (w[6] == (unsigned char)'³') num = 2; else return 0;
+      if (is_utf8_superscript(w+6, &num) != 2) return 0;
+      else --num;
     } else return 0;
 
     /* ci-dessous minipatch pour Dae qui reference les posts multiples
@@ -552,8 +571,7 @@ check_for_horloge_ref_basic_helper(const unsigned char *ww, const char **site_na
     if (*p == ':' || *p == '.' || *p == 'm') {
       p++;
       s = 0;
-      while (*p && *p != ':' && 
-	     *p != (unsigned char)'¹' && *p != (unsigned char)'²' && *p != (unsigned char)'³') {
+      while (*p && *p != ':' && !is_utf8_superscript(p, NULL)) {
 	if (*p < '0' || *p > '9') return 0;
 	s = 10*s + (*p - '0'); p++;
 	nb_char_s++;
@@ -561,8 +579,16 @@ check_for_horloge_ref_basic_helper(const unsigned char *ww, const char **site_na
       if (*p == (unsigned char)'¹') num = 0;
       if (*p == (unsigned char)'²') num = 1;
       if (*p == (unsigned char)'³') num = 2;
+      int len = is_utf8_superscript(p, &num);
+      if (len) { p += len-1; --num; }
       if (*p == ':') {
-	p++; if (*p >= '0' && *p <= '9') num = *p - '1';
+        p++; if (*p >= '0' && *p <= '9') {
+          num = *p - '1';
+          /* Triton> Magnifique patch pour le cas ou 10 posts ou plus arriveraient a la meme seconde */
+          p++; if (*p >= '0' && *p <= '9') {
+            num = (10 * (num+1)) + *p - '1';
+          }
+        }
       }
     } else s = -1;
 
@@ -714,8 +740,9 @@ board_get_tok(const unsigned char **p, const unsigned char **np,
       unsigned char last = *end;
       int is_multi = 0;
       while (*end && 
-	     ((*end >= '0' && *end <= '9') || strchr(":.hm¹²³", *end))) {
-	end++;
+	     ((*end >= '0' && *end <= '9') || strchr(":.hm", *end) || is_utf8_superscript(end, NULL))) {
+        int len = is_utf8_superscript(end,NULL); if (!len) len = 1;
+	end+=len;
 	if ((last < '0' || last > '9') && (*end < '0' || *end > '9'))
 	  break; /* deux caractères non numériques consécutifs, c'est la fin de l'horloge.. */
 	last = *end;
@@ -737,7 +764,7 @@ board_get_tok(const unsigned char **p, const unsigned char **np,
           int i;
           for (i=0; i < 100 && s[i]; ++i) {
             if (s[i] == ']' && i >= 2) { end = s+i+1; ok_totoz = 1; break; }
-            if (!isalnum(s[i]) && s[i] != '_' && s[i] != ' ' && s[i] != '-') break;
+            if (!isalnum(s[i]) && s[i] != '_' && s[i] != ' ' && s[i] != '-' && s[i] != ':') break;
           }
         }
         if (!ok_totoz) end++; /* pour relancer la machine */
@@ -745,6 +772,9 @@ board_get_tok(const unsigned char **p, const unsigned char **np,
       if (!ok_totoz) {
         /* un mot normal */
         while (*end && *end != '\t' && *end > ' ' && (*end < '0' || *end > '9') && (!(end[0] == '[' && end[1] == ':'))) end++;
+      }
+      if (ok_totoz) {
+        char ss[512]; strncpy(ss, start, MIN(end-start, max_toklen-1));ss[MIN(end-start, max_toklen-1)] = 0;
       }
     }
   }
