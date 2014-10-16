@@ -36,9 +36,9 @@
 ### equivalent de l'option '-r' -> url de la page principale
 
 #OBSOLETE#[.]http.site_url: http://linuxfr.org
-#OBSOLETE#[.]http.path_tribune_backend: board/remote.xml
-#OBSOLETE#[.]http.path_tribune_add: board/add.php3
-#OBSOLETE#[.]http.board_post: message=%s
+#OBSOLETE#[.]http.path_tribune_backend: board/index.xml
+#OBSOLETE#[.]http.path_tribune_add: board
+#OBSOLETE#[.]http.board_post: board[message]=%s
 ### les quatre options du dessus sont remplacees par:
 
 ### pour essayer de gerer un peu mieux les variations saisonnieres de codage
@@ -104,12 +104,12 @@
 ### le %s est remplace par le(s) mot(s) recherche(s)
 ### /!\ par defaut cette option n'est pas activee
 #http.gogole_search_url: http://www.google.fr/search?q=%22%s%22
-
+#http.wikipedia_search_url: http://en.wikipedia.org/wiki/Special:Search?search=%s
 ### par defaut le pinnipede est en helvetica, mais je trouve 'verdana' (en taille 11)
 ### bien plus jolie. l'inconvenient, c'est qu'elle est plus lente a afficher...          
 ### et qu'elle n'est pas dispo sur toutes les distribs
-#pinnipede.font_family: verdana
-#pinnipede.font_size: 11
+pinnipede.font_family: unifont
+pinnipede.font_size: 11
 #[.]pinnipede.bg_color: dae6e6
 
 
@@ -399,7 +399,7 @@ board.miniua_rule: ua:".*Linux.*" => color:="#80ff80"
 #OBSOLETE#[.]board.auto_refresh: on
 
 ### active la reconnaissance auto des mots du style [:totoz]
-### pour afficher l'image correspondante trouvee dans les smileys de hfr
+### pour afficher l'image correspondante trouvee dans les smileys de totoz.eu
 ### le d/l d'une image est assure par wmcc-totoz-get
 ### l'affichage par wmcoincoin_player
 #board.enable_hfr_pictures: on
