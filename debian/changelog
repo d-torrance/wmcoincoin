@@ -1,3 +1,20 @@
+wmcoincoin (2.6.2+20140602-1) UNRELEASED; urgency=medium
+
+  * New upstream release (git snapshot).
+  * debian/compat
+    - Bump to 9.
+  * debian/control
+    - Bump versioned dependency on debhelper to >=9.
+    - Bump Standards-Version to 3.9.6.
+  * debian/copyright
+    - Update machine-readable format v1.0.
+  * debian/rules
+    - Add get-orig-source target.
+  * debian/source/format
+    - New file; use 3.0 (quilt).
+
+ -- Doug Torrance <dtorrance@monmouthcollege.edu>  Fri, 17 Oct 2014 08:28:20 -0500
+
 wmcoincoin (2.5.1e-1) unstable; urgency=low
 
   * New upstream release
