@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+%:
+	dh $@ --with autoreconf
+
 get-orig-source:
 	@wget https://github.com/seeschloss/wmcoincoin/archive/master.tar.gz
 	@git checkout upstream
