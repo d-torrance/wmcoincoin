@@ -1,0 +1,26 @@
+Description: Patch for build failure
+ Hi there,
+ .
+ attached patch would fix this particular build failure, but I think the
+ package could need a general overhaul, given it has been 7 years since the
+ last upload ;). The example website (linuxfr.org) doesn't seem to be working
+ with this software anymore and I personally have no experience at all with
+ it.
+ .
+ Cheers,
+   Andreas
+Author: Andreas Moog <andreas.moog@warperbbs.de>
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=735755
+Last-Update: 2014-10-18
+
+--- a/platypus/Makefile.am
++++ b/platypus/Makefile.am
+@@ -1,7 +1,7 @@
+ bin_PROGRAMS = @WMCOINCOIN_PLAYER@
+ EXTRA_PROGRAMS = wmcoincoin_player
+ 
+-LIBS = `imlib2-config --libs`
++LIBS = `imlib2-config --libs`  `pkg-config --libs x11`
+ 
+ wmcoincoin_player_SOURCES = fmalloc.c giffunc.c gifread.c wmcoincoin_player.c gif.h
+ 
