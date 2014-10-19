@@ -1,0 +1,38 @@
+Description: Fix spelling-error-in-binary Lintian warnings.
+ Note that the remaining warnings are due to French spellings.
+Author: Doug Torrance <dtorrance@monmouthcollege.edu>
+Last-Update: 2014-10-19
+
+--- a/src/dock.c
++++ b/src/dock.c
+@@ -1002,7 +1002,7 @@
+       BLAHBLAH(1,printf(_("Coin !\n")));
+ 
+       if (dock->coin_coin_site_id == -1) {
+-	msgbox_show(dock, _("<b>Please</b> fill your options file with a valid site equiped with a board..."));
++	msgbox_show(dock, _("<b>Please</b> fill your options file with a valid site equipped with a board..."));
+       } else {
+ 	s = sl_find_site_id(dock->sites, dock->coin_coin_site_id);
+ 	if (s && s->board) {
+--- a/src/wmcoincoin.c
++++ b/src/wmcoincoin.c
+@@ -865,7 +865,7 @@
+           balloon_test(dock,x,y,iconx,icony,0,dock->leds.led[1].xpos, dock->leds.led[1].ypos, 9, 4,
+                        _("This led does no blink anymore.<br>" //blinks when you have just sent a message on the board, and it is waiting for its delivery.<br>"
+                          "It is blue when the message is being sent by the palmipede, and green half a second after the effective sending.<br>"
+-                         "A click on this led allows to change the scroll speed of the trolloscope:<br>"
++                         "A click on this led allows one to change the scroll speed of the trolloscope:<br>"
+                          "<font color=blue><tt>Left Click</tt></font><tab>: slower<br>"
+                          "<font color=blue><tt>Right Click</tt></font><tab>: faster<br>"
+                          "<font color=blue><tt>Middle Click</tt></font><tab>: change the trolloscope resolution"));
+--- a/po/fr.po
++++ b/po/fr.po
+@@ -1137,7 +1137,7 @@
+ msgid ""
+ "This led does no blink anymore.<br>It is blue when the message is being sent "
+ "by the palmipede, and green half a second after the effective sending.<br>A "
+-"click on this led allows to change the scroll speed of the trolloscope:"
++"click on this led allows one to change the scroll speed of the trolloscope:"
+ "<br><font color=blue><tt>Left Click</tt></font><tab>: slower<br><font "
+ "color=blue><tt>Right Click</tt></font><tab>: faster<br><font "
+ "color=blue><tt>Middle Click</tt></font><tab>: change the trolloscope "

@@ -1,3 +1,4 @@
 format-security.patch
 fix_x11_include.patch
 autotools_fixes.patch
+fix_spelling.patch
