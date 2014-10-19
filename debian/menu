@@ -1,5 +1,5 @@
 ?package(wmcoincoin): needs="X11" \
-                      section="Apps/Net" \
+                      section="Applications/Network/Communication" \
                       title="WMcoincoin" \
                       command="/usr/bin/wmcoincoin" \
                       icon="/usr/share/pixmaps/wmcoincoin.xpm"
