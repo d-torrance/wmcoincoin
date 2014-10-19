@@ -1,7 +1,19 @@
 #!/usr/bin/make -f
 
+INSTDIR = $(CURDIR)/debian/wmcoincoin/usr
+
 %:
 	dh $@ --with autoreconf
+
+override_dh_install:
+	dh_install
+	mv $(INSTDIR)/bin/wmcoincoin $(INSTDIR)/bin/wmcoincoin_player \
+		$(INSTDIR)/lib/wmcoincoin/
+	mv $(INSTDIR)/bin/wmcoincoin-* $(INSTDIR)/share/wmcoincoin
+	rm -f $(INSTDIR)/share/wmcoincoin/wmcoincoin.spec
+	rm -f $(INSTDIR)/share/wmcoincoin/README
+	( cd $(INSTDIR)/share/pixmaps && mv icon.xpm wmcoincoin.xpm )
+	( cd $(INSTDIR)/bin && mv wmcoincoin.sh wmcoincoin )
 
 get-orig-source:
 	@wget https://github.com/seeschloss/wmcoincoin/archive/master.tar.gz
