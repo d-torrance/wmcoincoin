@@ -1,4 +1,4 @@
-wmcoincoin (2.6.2+20140602-1) UNRELEASED; urgency=medium
+wmcoincoin (2.6.2+20140602-1) unstable; urgency=medium
 
   * New upstream release (git snapshot).
   * New maintainer (Closes: #765837).
@@ -42,7 +42,7 @@ wmcoincoin (2.6.2+20140602-1) UNRELEASED; urgency=medium
   * debian/watch
     - New file; obtained from sepwatch.
 
- -- Doug Torrance <dtorrance@monmouthcollege.edu>  Fri, 17 Oct 2014 08:28:20 -0500
+ -- Doug Torrance <dtorrance@monmouthcollege.edu>  Sat, 25 Oct 2014 00:05:20 -0500
 
 wmcoincoin (2.5.1e-1) unstable; urgency=low
 
