@@ -1,0 +1,26 @@
+Description: Fix compiler warning.
+ In particular,
+ palmipede.c: In function ‘editw_insert_string’:
+ palmipede.c:572:3: warning: passing argument 2 of ‘convert_to_iso8859’
+ from incompatible pointer type [enabled by default]
+    convert_to_iso8859("UTF-8", &s);
+    ^
+ In file included from palmipede.c:193:0:
+ coin_util.h:94:6: note: expected ‘char **’ but argument is of type
+ ‘unsigned char **’
+  void convert_to_iso8859(const char *src_encoding, char **psrc);
+       ^
+Author: Doug Torrance <dtorrance@monmouthcollege.edu>
+Last-Update: 2014-10-24
+
+--- a/src/palmipede.c
++++ b/src/palmipede.c
+@@ -568,7 +568,7 @@
+ int
+ editw_insert_string(EditW *ew, const unsigned char *str)
+ {
+-  unsigned char *s = strdup(str);
++  char *s = strdup(str);
+   convert_to_iso8859("UTF-8", &s);
+   int ls,lb,lrest,ldec;
+   int tronq;

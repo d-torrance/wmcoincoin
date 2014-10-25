@@ -2,3 +2,17 @@ format-security.patch
 fix_x11_include.patch
 autotools_fixes.patch
 fix_spelling.patch
+unused-variable.patch
+unused-but-set-variable.patch
+sizeof-pointer-memaccess.patch
+unused-result.patch
+type-limits.patch
+implicit-function-declaration.patch
+pointer-to-int-cast.patch
+unused-but-set-parameter.patch
+sign-compare.patch
+maybe-uninitialized.patch
+parentheses.patch
+int-to-pointer-cast.patch
+unused-parameter.patch
+incompatible_pointer_type.patch

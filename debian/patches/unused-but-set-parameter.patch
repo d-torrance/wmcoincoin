@@ -1,0 +1,37 @@
+Description: Fix -Wunused-but-set-parameter compiler warnings.
+Author: Doug Torrance <dtorrance@monmouthcollege.edu>
+Last-Update: 2014-10-24
+
+--- a/src/pinnipede.c
++++ b/src/pinnipede.c
+@@ -4006,7 +4006,8 @@
+ int
+ pp_handle_keyrelease(Dock *dock, XEvent *event)
+ {
+-  dock = 0; event = 0;
++  (void) dock;
++  (void) event;
+   return 0;
+ }
+ 
+--- a/src/balloon.c
++++ b/src/balloon.c
+@@ -181,7 +181,7 @@
+   }
+   XFillPolygon(dpy, pix, gc, pt, 3, Convex, CoordModeOrigin);
+   */
+-  side=0;
++  (void) side;
+ }
+ 
+ static void
+@@ -219,7 +219,8 @@
+ 
+     *mask = bitmap;
+     *pix = pixmap;
+-    bx = by = 0;
++    (void) bx;
++    (void) by;
+ }
+ 
+ void

@@ -1,0 +1,361 @@
+Description: Fix -Wunused-but-set-variable compiler warnings.
+Author: Doug Torrance
+Last-Update: 2014-10-24
+
+--- a/src/troll_detector.c
++++ b/src/troll_detector.c
+@@ -161,13 +161,11 @@
+ static Word *
+ decoupe_bloc(unsigned char *start, unsigned char *end, int in_tag)
+ {
+-  int n;
+   unsigned char *s, *tagstart, *tagend;
+   Word *wl;
+   
+   assert(start); assert(end);
+ 
+-  n = end - start;
+   if (start == end) return NULL;
+   wl = NULL;
+ 
+--- a/src/pinnipede.c
++++ b/src/pinnipede.c
+@@ -673,10 +673,9 @@
+     }
+     if (add_word) {
+       int is_ref;
+-      board_msg_info *ref_mi = NULL;
+ 
+       if ((attr & PWATTR_LNK) == 0) {
+-        ref_mi = check_for_horloge_ref(board->boards, mi->id, s,attr_s, PVTP_SZ, &is_ref, NULL);
++        check_for_horloge_ref(board->boards, mi->id, s,attr_s, PVTP_SZ, &is_ref, NULL);
+         if (is_ref) {
+           attr |= PWATTR_REF;
+         }
+@@ -1088,7 +1087,6 @@
+ {
+   Pinnipede *pp = dock->pinnipede;
+   int pl;
+-  int old_pos;
+   unsigned long pixel; //, old_pixel;
+   CCColorId color;
+   int y;
+@@ -1167,7 +1165,6 @@
+ 
+   pixel = 0L;
+   y = ccfont_ascent(pp->fn_base)-1;
+-  old_pos = 0;
+   if (pw) {
+     CCFontId fn;
+     pl = pw->ligne;
+@@ -1305,7 +1302,6 @@
+ 	XDrawLine(dock->display, lpix, dock->NormalGC, pw->xpos, y-ccfont_height(fn)/2, x1, y-ccfont_height(fn)/2);
+       }
+       pw->attr &= ~PWATTR_TMP_EMPH;
+-      old_pos = pw->xpos + pw->xwidth;
+       pw = pw->next;
+     }
+   }
+@@ -1361,7 +1357,7 @@
+   Boards *boards = dock->sites->boards;
+ 
+   int l;
+-  board_msg_info *ref_mi, *caller_mi;
++  board_msg_info *ref_mi;
+   unsigned char ref_comment[200];
+   int ref_in_window = 0; /* mis a 1 si le message souligné par pw_ref est affiché parmi
+ 			    les autres messages. sinon, on l'affiche en haut, dans une petite fenetre */
+@@ -1406,7 +1402,6 @@
+     }
+   }
+ 
+-  caller_mi = NULL;
+   ref_mi = NULL;
+   nb_anti_ref = 0;
+   
+--- a/src/pinnipede_widgets.c
++++ b/src/pinnipede_widgets.c
+@@ -64,7 +64,7 @@
+ {
+   int cnt;
+   
+-  int tab_max_w,tab_min_w, tab_w, tabs_min_w=-1, tabs_max_w=-1, tabs_w=-1;
++  int tab_max_w,tab_min_w, tab_w, tabs_min_w=-1, tabs_w=-1;
+   int x,y;
+ 
+   pp->zmsg_y1 = 0;
+@@ -80,7 +80,6 @@
+   tab_min_w = 40;
+   tab_max_w = 100;
+   tabs_min_w = pp->nb_tabs * tab_min_w;
+-  tabs_max_w = pp->nb_tabs * tab_max_w;
+   tab_w = MIN(MAX(pp->win_width / pp->nb_tabs, tab_min_w), tab_max_w);
+   tabs_w = pp->nb_tabs * tab_w;
+ 
+@@ -721,7 +720,7 @@
+ static void pp_tabs_handle_motion(Dock *dock, XMotionEvent *ev) {
+   Pinnipede *pp = dock->pinnipede;
+   PinnipedeTab *pt;
+-  int refresh = 0;
++  /* int refresh = 0; */
+   ppt_survol_actions survol_part;
+   //static int flag = 0;
+   pt = pp_tabs_at_xy(dock, ev->x, ev->y, &survol_part);
+@@ -737,7 +736,7 @@
+     pp->survol_tab = pt; 
+     pp->survol_tab_part = survol_part;
+     pp_widgets_refresh(dock);
+-    refresh = 1;
++    /* refresh = 1; */
+   }
+   /*if (refresh) {
+     pp_update_and_redraw(dock,get_last_id_filtered(dock->sites->boards, &pp->filter), 100,0,1);
+@@ -933,13 +932,11 @@
+ {
+   Pinnipede *pp = dock->pinnipede;
+   Boards *boards = dock->sites->boards;
+-  SitePrefs *main_prefs; 
+   Site *main_site;
+   int i,x,y;
+ 
+   int x_minib;
+ 
+-  main_prefs = pp->active_tab->site->prefs;
+   main_site = pp->active_tab->site;
+ 
+   if (pp->use_minibar == 0) return;
+--- a/src/palmipede.c
++++ b/src/palmipede.c
+@@ -1720,10 +1720,10 @@
+ editw_set_kbfocus(Dock *dock, EditW *ew, int get_it)
+ {
+   Window focwin;
+-  int revert_to, pp_focus;
++  int revert_to;/* , pp_focus; */
+   if (Prefs.palmipede_override_redirect) {
+     XGetInputFocus(dock->display, &focwin, &revert_to);
+-    pp_focus = (pp_ismapped(dock) && focwin == pp_get_win(dock));
++    /* pp_focus = (pp_ismapped(dock) && focwin == pp_get_win(dock)); */
+     if (get_it && ew->mapped/* && !pp_focus*/)
+       XSetInputFocus(dock->display, ew->win, RevertToPointerRoot, CurrentTime);
+     else /*if (!get_it) {
+@@ -2294,10 +2294,9 @@
+ editw_handle_keyrelease(Dock *dock, EditW *ew, XEvent *event)
+ {
+   KeySym ksym;
+-  int klen;
+   unsigned char buff[4];
+ 
+-  klen = XLookupString(&event->xkey, (char*)buff, sizeof(buff), &ksym, NULL);
++  XLookupString(&event->xkey, (char*)buff, sizeof(buff), &ksym, NULL);
+   if (ksym == XK_Return || ksym == XK_KP_Enter) {
+     if (dock_red_button_check(dock)) {
+       editw_hide(dock, ew);
+--- a/src/dock.c
++++ b/src/dock.c
+@@ -1516,9 +1516,6 @@
+ static void
+ dock_handle_button_press_horloge_mode(Dock *dock, XButtonEvent *xbevent)
+ {
+-  int x,y;
+-  x = xbevent->x; y = xbevent->y;
+-  
+   if (xbevent->button == Button1 && (xbevent->state & ControlMask)) {
+     dock_unset_horloge_mode(dock);
+   }
+--- a/src/board.c
++++ b/src/board.c
+@@ -750,12 +750,12 @@
+ static void
+ board_remove_old_msg(Board *board)
+ {
+-  board_msg_info *it, *pit;
++  board_msg_info *it;
+   int cnt;
+   int removed = 0;
+ 
+   cnt = 0;
+-  it = board->msg; pit = NULL;
++  it = board->msg;
+   while (it) {
+     cnt++;
+     it = it->next;
+@@ -1340,7 +1340,7 @@
+ board_log_msg(Board *board, char *ua, char *login, char *stimestamp, char *_message, int id, 
+               const unsigned char *my_useragent)
+ {
+-  board_msg_info *nit, *pit, *ppit, *it;
++  board_msg_info *nit, *pit, *it;
+   board_msg_info *g_it, *pg_it;
+   char *message = NULL;
+   Boards *boards = board->boards;
+@@ -1378,12 +1378,10 @@
+   */
+   nit = board->msg;
+   pit = NULL;
+-  ppit = NULL;
+   while (nit) {
+     if (nit->id.lid > id) {
+       break;
+     }
+-    ppit = pit;
+     pit = nit;
+     nit = nit->next;
+   }
+--- a/src/board_pop3.c
++++ b/src/board_pop3.c
+@@ -35,10 +35,8 @@
+ 
+ char* copy_text_between_angles(const char *src, char *dest, size_t dest_sz) {
+   char *a, *b;
+-  size_t n;
+   a = strchr(src, '<'); if (!a) return NULL;
+   b = strchr(a, '>'); if (!b) return NULL;
+-  n = MIN(dest_sz, (size_t)(b-a+1));
+   memmove(dest, a, dest_sz);
+   if ((size_t)(b-a+1) < dest_sz) dest[b-a+1] = 0;
+   else dest[dest_sz-1] = 0;
+--- a/src/scrollcoin.c
++++ b/src/scrollcoin.c
+@@ -392,9 +392,8 @@
+ int
+ scrollcoin_handle_motion(ScrollCoin *sc, XMotionEvent *ev, Drawable d)
+ {
+-  int mx, my;
++  int my;
+ 
+-  mx = ev->x;
+   my = ev->y;
+   if (sc->dragging && (ev->state & Button1Mask)) {
+     int decal;
+--- a/src/picohtml.c
++++ b/src/picohtml.c
+@@ -226,7 +226,7 @@
+ 
+   /* valable pour la ligne en cours de traitement,
+      utilises pour la justification finale */
+-  int xpos_debut_ligne;
++  //int xpos_debut_ligne;
+   PicoHtmlItem *it_debut_ligne;
+ 
+   int htext, space_width, parag_skip, line_skip, parag_align, next_parag_align;
+@@ -269,7 +269,7 @@
+   x = 0; //- parag_skip;
+   y = 0; //parag_skip;
+ 
+-  xpos_debut_ligne = x;
++  //xpos_debut_ligne = x;
+   cur_color = ph->default_color;
+   while (*p) {
+     flag_item_to_add = 0;
+@@ -405,7 +405,7 @@
+     if (new_parag) {
+       x = ph->parag_indent;
+       y += parag_skip;
+-      xpos_debut_ligne = x;
++      //xpos_debut_ligne = x;
+       if (parag_align != NORMAL) {
+ 	//	justif_ligne(ph, it_debut_ligne, xpos_debut_ligne, width, parag_align);
+ 	justif_ligne(it_debut_ligne, width, parag_align);
+@@ -439,7 +439,7 @@
+       if (new_parag) {
+ 	x = ph->parag_indent;
+ 	y += parag_skip;
+-	xpos_debut_ligne = x;
++	//xpos_debut_ligne = x;
+ 	parag_align = next_parag_align;
+       }
+ 
+@@ -456,7 +456,7 @@
+ 	else
+ 		x = 0;
+ 	y += line_skip; 
+-	xpos_debut_ligne = x;
++	//xpos_debut_ligne = x;
+ 	it_debut_ligne = picohtml_additem(ph, tok, len, attrib, x, y, cur_fn, cur_color, cur_link, special_attr);
+ 	x += w;
+       } else {
+--- a/src/balloon.c
++++ b/src/balloon.c
+@@ -255,10 +255,10 @@
+   int bx, by;
+   Balloon *b = dock->balloon;
+   int xiscr;
+-  int sx,sy,sw,sh;
++  int sx,sy,sw/* ,sh */;
+   xiscr = MAX(dock_find_xiscreen_num(dock,x,y),0);
+   sx = dock->xiscreen[xiscr].x_org; sw = dock->xiscreen[xiscr].width;
+-  sy = dock->xiscreen[xiscr].y_org; sh = dock->xiscreen[xiscr].height;
++  sy = dock->xiscreen[xiscr].y_org; /* sh = dock->xiscreen[xiscr].height; */
+   if (b->mapped) {
+     balloon_hide(dock);
+   }
+--- a/src/http_unix.c
++++ b/src/http_unix.c
+@@ -204,14 +204,12 @@
+   }
+   default: { /* pôpa */
+     int got, cstat;
+-    time_t time_debut;
+     int iplist_sz = 20, iplist_len=0, iplist_ok = 0;
+ 
+     iplist = malloc(iplist_sz); assert(iplist); iplist[0] = 0;
+     if (close(tube[1]) == -1) {
+       fprintf(stderr, _("daddy: pipe full (%s), what will do now ?\n"), strerror(errno)); close(tube[0]);
+     }
+-    time_debut = time(NULL);
+     while (1) {
+       int retval;
+       if (flag_cancel_task) break;
+--- a/src/coin_util.c
++++ b/src/coin_util.c
+@@ -1273,14 +1273,13 @@
+ 
+ /* ben voila.. fionalement je l'ai faite, du coup faudrait updater url au coiffeur */
+ int split_url(const char *url, SplittedURL *d) {
+-  char *p, *p2, *start, *end;
++  char *p, *p2, *start;
+   strncpy(d->data, url, 1000); d->data[999] = 0;
+   str_trim(d->data);
+   p = d->data;
+   if (strlen(d->data) == 0) return -1;
+   if (p[0] == '"' && p[strlen(d->data)-1] == '"') { p++; d->data[strlen(d->data)-1] = 0; }
+   start = p;
+-  end = d->data + strlen(d->data);
+   p = strstr(p, "://"); if (!p) return -1;
+   *p = 0;
+   if (strcasecmp(start, "http") == 0) {
+--- a/src/prefs.c
++++ b/src/prefs.c
+@@ -525,12 +525,11 @@
+   cnt = 0;
+   do {
+     enum { MATCH_UA, MATCH_LOGIN, MATCH_SITE, REPL_UA, REPL_COL, REPL_SYMB, TOKERR } tok_type;
+-    int separ_ok = 0;
+     int i;
+     s_tok = s; /* juste pour pouvoir signaler sur que element s'est produit l'erreur */
+-    if (strncmp(s, "=>", 2) == 0 && rule_section == 1) { separ_ok = 1; rule_section = 0; s += 2; }
+-    else if (s == str) separ_ok = 1;
+-    else if (*s == ',') { separ_ok = 1; s++; }
++    if (strncmp(s, "=>", 2) == 0 && rule_section == 1) { rule_section = 0; s += 2; }
++    else if (s == str) ;
++    else if (*s == ',') s++;
+     else goto erreur;
+ 
+     while (*s && *s <= ' ') s++;
+--- a/src/wmccc.c
++++ b/src/wmccc.c
+@@ -209,12 +209,11 @@
+ /* Function to open a dialog box displaying the message provided. */
+ void quick_message(gchar *message_fmt, ...) {
+   va_list ap;
+-  GtkWidget *label;
+   char s[1024];
+   va_start(ap, message_fmt);
+   vsnprintf(s,1024,message_fmt,ap);
+   va_end(ap);
+-  label = messagebox_dialog("messagebox_label"); 
++  messagebox_dialog("messagebox_label");
+   gtk_label_set_text(GTK_LABEL(messagebox_dialog("messagebox_label")), s);
+   gtk_dialog_run (GTK_DIALOG(messagebox_dialog(NULL)));
+ }

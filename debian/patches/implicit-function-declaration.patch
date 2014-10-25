@@ -1,0 +1,26 @@
+Description: Fix -Wimplicit-function-declaration compiler warnings.
+Author: Doug Torrance
+Last-Update 2014-10-24
+
+--- a/src/pinnipede.h
++++ b/src/pinnipede.h
+@@ -238,6 +238,9 @@
+   Pixmap miniduck_pixmap;
+ };
+ 
++void ccfont_draw_string_utf8(CCFontId fid, CCColorId cid, Drawable d, int x, int y, char *str, int len);
++int ccfont_text_width_utf8(CCFontId fid, char *str, int len);
++int ccfont_text_xbox_utf8(CCFontId fid, char *str, int len, short *pxstart, short *pxoff);
+ int filter_msg_info(const board_msg_info *mi, const struct _PinnipedeFilter *filter);
+ int count_all_id_filtered(Boards *boards, struct _PinnipedeFilter *filter);
+ id_type get_first_id_filtered(Boards *boards, struct _PinnipedeFilter *filter);
+--- a/src/board_priv.h
++++ b/src/board_priv.h
+@@ -17,6 +17,7 @@
+ #define BOARD_MSG_MAX_LEN 15000 /* on peut y arriver avec un bon gros message plein de [][][][]... */
+ #define BOARD_LOGIN_MAX_LEN 60
+ 
++void convert_to_utf8(const char *src_encoding, char **psrc);
+ void release_md5_array(Board *b);
+ md5_and_time *find_md5_in_md5_array(md5_byte_t md5[16], md5_and_time *m);
+ void board_decode_message(Board *board, char *dest, const char *src);
