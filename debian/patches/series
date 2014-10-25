@@ -16,3 +16,4 @@ parentheses.patch
 int-to-pointer-cast.patch
 unused-parameter.patch
 incompatible_pointer_type.patch
+incompatible_struct_type.patch
