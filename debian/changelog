@@ -1,10 +1,13 @@
-wmcoincoin (2.6.2+20141120-1) UNRELEASED; urgency=medium
+wmcoincoin (2.6.2+20141120-1) unstable; urgency=medium
 
   * New upstream release (git snapshot).
   * debian/patches
     - Remove directory; patches applied upstream.
+  * debian/rules
+    - Append "-Wl, --as-needed" to LDFLAGS; avoids "useless dependency" warnings
+      from dpkg-shlibdeps.
 
- -- Doug Torrance <dtorrance@monmouthcollege.edu>  Sun, 23 Nov 2014 01:19:11 -0600
+ -- Doug Torrance <dtorrance@monmouthcollege.edu>  Sun, 23 Nov 2014 18:33:40 -0600
 
 wmcoincoin (2.6.2+20140602-1) unstable; urgency=medium
 
